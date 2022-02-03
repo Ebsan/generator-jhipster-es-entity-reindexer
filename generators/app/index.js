@@ -135,27 +135,27 @@ module.exports = class extends BaseGenerator {
         }
     }
 
-    install() {
-        const logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
+    // install() {
+    //     const logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
-        const injectDependenciesAndConstants = err => {
-            if (err) {
-                this.warning('Install of dependencies failed!');
-                this.log(logMsg);
-            }
-        };
-        const installConfig = {
-            bower: false,
-            npm: this.clientPackageManager !== 'yarn',
-            yarn: this.clientPackageManager === 'yarn',
-            callback: injectDependenciesAndConstants,
-        };
-        if (this.options['skip-install']) {
-            this.log(logMsg);
-        } else {
-            this.installDependencies(installConfig);
-        }
-    }
+    //     const injectDependenciesAndConstants = err => {
+    //         if (err) {
+    //             this.warning('Install of dependencies failed!');
+    //             this.log(logMsg);
+    //         }
+    //     };
+    //     const installConfig = {
+    //         bower: false,
+    //         npm: this.clientPackageManager !== 'yarn',
+    //         yarn: this.clientPackageManager === 'yarn',
+    //         callback: injectDependenciesAndConstants
+    //     };
+    //     if (this.options['skip-install']) {
+    //         this.log(logMsg);
+    //     } else {
+    //         this.installDependencies(installConfig);
+    //     }
+    // }
 
     end() {
         this.log('End of es-entity-reindexer generator');
