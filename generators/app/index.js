@@ -1,7 +1,12 @@
 const chalk = require('chalk');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
-const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
+const {
+    SERVER_MAIN_SRC_DIR,
+    SERVER_MAIN_RES_DIR,
+    CLIENT_MAIN_SRC_DIR,
+    SUPPORTED_CLIENT_FRAMEWORKS,
+} = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
 
 module.exports = class extends BaseGenerator {
@@ -39,11 +44,11 @@ module.exports = class extends BaseGenerator {
                         `\nYour generated project used an old JHipster version (${currentJhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`
                     );
                 }
-            }
+            },
         };
     }
 
-    prompting() {
+    async prompting() {
         this.entityNames = this.getExistingEntityNames();
 
         const prompts = [
@@ -53,15 +58,13 @@ module.exports = class extends BaseGenerator {
                 name: 'entities',
                 message: 'Which entities would you like to reindex with Elasticsearch?',
                 choices: this.entityNames,
-                default: this.entityNames[0]
-            }
+                default: this.entityNames[0],
+            },
         ];
 
-        const done = this.async();
-        this.prompt(prompts).then(answers => {
+        await this.prompt(prompts).then(answers => {
             this.promptAnswers = answers;
             // To access props answers use this.promptAnswers.someOption;
-            done();
         });
     }
 
@@ -75,12 +78,12 @@ module.exports = class extends BaseGenerator {
         this.buildTool = this.jhipsterAppConfig.buildTool;
 
         // use function in generator-base.js from generator-jhipster
-        this.angularAppName = this.getAngularAppName();
+        this.frontendAppName = this.getFrontendAppName();
 
         // use constants from generator-constants.js
-        const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
-        const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
-        const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
+        const javaDir = `${SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
+        const resourceDir = SERVER_MAIN_RES_DIR;
+        const webappDir = CLIENT_MAIN_SRC_DIR;
 
         // variable from questions
         if (typeof this.entities === 'undefined') {
@@ -96,7 +99,7 @@ module.exports = class extends BaseGenerator {
         this.log(`buildTool=${this.buildTool}`);
 
         this.log('\n--- some function ---');
-        this.log(`angularAppName=${this.angularAppName}`);
+        this.log(`frontendAppName=${this.frontendAppName}`);
 
         this.log('\n--- some const ---');
         this.log(`javaDir=${javaDir}`);
@@ -107,18 +110,18 @@ module.exports = class extends BaseGenerator {
         this.log(`Entities=${this.entities}`);
         this.log('------\n');
 
-        if (this.clientFramework === 'react') {
-            this.template('dummy.txt', 'dummy-react.txt');
+        if (Object.values(SUPPORTED_CLIENT_FRAMEWORKS).includes(this.clientFramework)) {
+            this.template('dummy.txt', `dummy-${this.clientFramework}.txt`);
         }
-        if (this.clientFramework === 'angularX') {
-            this.template('dummy.txt', 'dummy-angularX.txt');
-        }
+
         if (this.buildTool === 'maven') {
             this.template('dummy.txt', 'dummy-maven.txt');
-        }
-        if (this.buildTool === 'gradle') {
+        } else if (this.buildTool === 'gradle') {
             this.template('dummy.txt', 'dummy-gradle.txt');
         }
+
+        // Register this generator as a dev dependency
+        this.addNpmDevDependency('generator-jhipster-es-entity-reindexer', packagejs.version);
         try {
             this.registerModule(
                 'generator-jhipster-es-entity-reindexer',
@@ -145,7 +148,7 @@ module.exports = class extends BaseGenerator {
             bower: false,
             npm: this.clientPackageManager !== 'yarn',
             yarn: this.clientPackageManager === 'yarn',
-            callback: injectDependenciesAndConstants
+            callback: injectDependenciesAndConstants,
         };
         if (this.options['skip-install']) {
             this.log(logMsg);
