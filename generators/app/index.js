@@ -7,14 +7,14 @@ const packagejs = require('../../package.json');
 module.exports = class extends BaseGenerator {
     get initializing() {
         return {
-            init(args) {
-                if (args === 'default') {
-                    // do something when argument is 'default'
-                    this.message = 'default message';
-                }
-            },
+            // init(args) {
+            //     if (args === 'default') {
+            //         // do something when argument is 'default'
+            //         this.message = 'default message';
+            //     }
+            // },
             readConfig() {
-                this.jhipsterAppConfig = this.getAllJhipsterConfig();
+                this.jhipsterAppConfig = this.getJhipsterConfig('.yo-rc.json').createProxy();
                 if (!this.jhipsterAppConfig) {
                     this.error('Cannot read .yo-rc.json');
                 }
@@ -44,13 +44,16 @@ module.exports = class extends BaseGenerator {
     }
 
     prompting() {
+        this.entityNames = this.getExistingEntityNames();
+
         const prompts = [
             {
-                when: () => typeof this.message === 'undefined',
-                type: 'input',
-                name: 'message',
-                message: 'Please put something',
-                default: 'hello world!'
+                when: () => typeof this.entities === 'undefined',
+                type: 'checkbox',
+                name: 'entities',
+                message: 'Which entities would you like to reindex with Elasticsearch?',
+                choices: this.entityNames,
+                default: this.entityNames[0]
             }
         ];
 
@@ -80,8 +83,8 @@ module.exports = class extends BaseGenerator {
         const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
 
         // variable from questions
-        if (typeof this.message === 'undefined') {
-            this.message = this.promptAnswers.message;
+        if (typeof this.entities === 'undefined') {
+            this.entities = this.promptAnswers.entities;
         }
 
         // show all variables
@@ -101,7 +104,7 @@ module.exports = class extends BaseGenerator {
         this.log(`webappDir=${webappDir}`);
 
         this.log('\n--- variables from questions ---');
-        this.log(`message=${this.message}`);
+        this.log(`Entities=${this.entities}`);
         this.log('------\n');
 
         if (this.clientFramework === 'react') {
