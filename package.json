@@ -8,22 +8,48 @@
     "jhipster-6"
   ],
   "homepage": "https://github.com/ebsanu/generator-jhipster-es-entity-reindexer",
+  "bugs": {
+    "url": "https://github.com/ebsanu/generator-jhipster-es-entity-reindexer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ebsanu/generator-jhipster-es-entity-reindexer.git"
+  },
+  "license": "Apache-2.0",
   "author": {
     "name": "Ebsan Uddin",
     "email": "ebsanu@gmail.com",
     "url": "https://github.com/Ebsan"
   },
+  "main": "generators/app/index.js",
   "files": [
     "generators"
   ],
-  "main": "generators/app/index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ebsanu/generator-jhipster-es-entity-reindexer.git"
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "prettier:format": "prettier --write \"{,**/}*.{js,json,md,yml}\"",
+    "release": "git push && git push --tags && npm publish",
+    "release:major": "npm version major -a -m \"Update to %s\" && npm run release",
+    "release:minor": "npm version minor -a -m \"Update to %s\" && npm run release",
+    "release:patch": "npm version patch -a -m \"Update to %s\" && npm run release",
+    "pretest": "eslint .",
+    "test": "mocha test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,yml,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
     "chalk": "3.0.0",
-    "generator-jhipster": ">=6.0.0",
+    "generator-jhipster": ">=7.0.0",
     "mkdirp": "0.5.1",
     "semver": "7.1.1",
     "shelljs": "0.8.3",
@@ -42,31 +68,5 @@
     "prettier": "1.19.1",
     "yeoman-assert": "3.1.1",
     "yeoman-test": "2.0.0"
-  },
-  "scripts": {
-    "prettier:format": "prettier --write \"{,**/}*.{js,json,md,yml}\"",
-    "pretest": "eslint .",
-    "lint": "eslint .",
-    "lint-fix": "eslint . --fix",
-    "release": "git push && git push --tags && npm publish",
-    "release:patch": "npm version patch -a -m \"Update to %s\" && npm run release",
-    "release:minor": "npm version minor -a -m \"Update to %s\" && npm run release",
-    "release:major": "npm version major -a -m \"Update to %s\" && npm run release",
-    "test": "mocha test"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,json,yml,md}": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/ebsanu/generator-jhipster-es-entity-reindexer/issues"
   }
 }
