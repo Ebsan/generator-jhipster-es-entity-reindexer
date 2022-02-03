@@ -1,0 +1,10 @@
+{
+  "generator-jhipster-module": {
+    "promptValues": {
+      "githubName": "ebsanu",
+      "authorName": "Ebsan Uddin",
+      "authorEmail": "ebsanu@gmail.com",
+      "authorUrl": "https://github.com/Ebsan"
+    }
+  }
+}
