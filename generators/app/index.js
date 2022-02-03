@@ -5,7 +5,7 @@ const {
     SERVER_MAIN_SRC_DIR,
     SERVER_MAIN_RES_DIR,
     CLIENT_MAIN_SRC_DIR,
-    SUPPORTED_CLIENT_FRAMEWORKS,
+    SUPPORTED_CLIENT_FRAMEWORKS
 } = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
 
@@ -44,7 +44,7 @@ module.exports = class extends BaseGenerator {
                         `\nYour generated project used an old JHipster version (${currentJhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`
                     );
                 }
-            },
+            }
         };
     }
 
@@ -58,8 +58,8 @@ module.exports = class extends BaseGenerator {
                 name: 'entities',
                 message: 'Which entities would you like to reindex with Elasticsearch?',
                 choices: this.entityNames,
-                default: this.entityNames[0],
-            },
+                default: this.entityNames[0]
+            }
         ];
 
         await this.prompt(prompts).then(answers => {

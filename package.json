@@ -37,11 +37,6 @@
     "pretest": "eslint .",
     "test": "mocha test"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,json,yml,md}": [
       "prettier --write",
