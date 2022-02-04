@@ -164,12 +164,12 @@ module.exports = class extends BaseGenerator {
          *  WRITE TEMPLATES
          */
         if (!this.skipServer) {
-            // this.template(
-            //     'src/main/java/package/web/rest/_ElasticsearchIndexResource.java',
-            //     `${this.javaDir}/web/rest/ElasticsearchIndexResource.java`,
-            //     this,
-            //     {}
-            // );
+            this.template(
+                'src/main/java/package/web/rest/_ElasticsearchIndexResource.java.ejs',
+                `${javaDir}/web/rest/ElasticsearchIndexResource.java`,
+                this,
+                {}
+            );
             this.template(
                 'src/main/java/package/service/_ElasticsearchIndexService.java.ejs',
                 `${javaDir}/service/ElasticsearchIndexService.java`,
