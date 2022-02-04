@@ -43,25 +43,26 @@ module.exports = class extends BaseGenerator {
         };
     }
 
-    async prompting() {
-        this.entityNames = this.getExistingEntityNames();
+    // TODO Prompting not really needed since ALL entities should always be reindexable.
+    // async prompting() {
+    //     this.entityNames = this.getExistingEntityNames();
 
-        const prompts = [
-            {
-                when: () => typeof this.entities === 'undefined',
-                type: 'checkbox',
-                name: 'entities',
-                message: 'Which entities would you like to reindex with Elasticsearch?',
-                choices: this.entityNames,
-                default: this.entityNames[0]
-            }
-        ];
+    //     const prompts = [
+    //         {
+    //             when: () => typeof this.entities === 'undefined',
+    //             type: 'checkbox',
+    //             name: 'entities',
+    //             message: 'Which entities would you like to reindex with Elasticsearch?',
+    //             choices: this.entityNames,
+    //             default: this.entityNames[0]
+    //         }
+    //     ];
 
-        await this.prompt(prompts).then(answers => {
-            this.promptAnswers = answers;
-            // To access props answers use this.promptAnswers.someOption;
-        });
-    }
+    //     await this.prompt(prompts).then(answers => {
+    //         this.promptAnswers = answers;
+    //         // To access props answers use this.promptAnswers.someOption;
+    //     });
+    // }
 
     writing() {
         // read config from .yo-rc.json
@@ -94,10 +95,12 @@ module.exports = class extends BaseGenerator {
         const resourceDir = SERVER_MAIN_RES_DIR;
         const webappDir = CLIENT_MAIN_SRC_DIR;
 
+        // TODO to delete per above
         // variable from questions
-        if (typeof this.entities === 'undefined') {
-            this.entities = this.promptAnswers.entities; // TODO If no entities are selected we should probably exit early
-        }
+        // if (typeof this.entities === 'undefined') {
+        //     this.entities = this.promptAnswers.entities; // TODO If no entities are selected we should probably exit early
+        // }
+        this.entities = this.getExistingEntityNames();
 
         // show all variables
         this.log('\n--- some config read from config ---');

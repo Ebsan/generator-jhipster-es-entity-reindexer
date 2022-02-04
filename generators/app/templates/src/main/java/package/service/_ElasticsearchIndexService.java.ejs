@@ -21,7 +21,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.ManyToMany;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -133,13 +132,12 @@ public class ElasticsearchIndexService implements ApplicationListener<ContextRef
     private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
                                                               ElasticsearchRepository<T, ID> elasticsearchRepository) {
         String className = entityClass.getSimpleName();
-        elasticsearchOperations.deleteIndex(entityClass);
+        elasticsearchOperations.indexOps(entityClass).delete();
         try {
-            elasticsearchOperations.createIndex(entityClass);
+            elasticsearchOperations.indexOps(entityClass).createWithMapping();
         } catch (ResourceAlreadyExistsException e) {
             // Do nothing. Index was already concurrently recreated by some other service.
         }
-        elasticsearchOperations.putMapping(entityClass);
         if (jpaRepository.count() > 0) {
             // if a JHipster entity field is the owner side of a many-to-many relationship, it should be loaded manually
             List<Method> relationshipGetters = Arrays.stream(entityClass.getDeclaredFields())
@@ -161,7 +159,7 @@ public class ElasticsearchIndexService implements ApplicationListener<ContextRef
 
             int size = 100;
             for (int i = 0; i <= jpaRepository.count() / size; i++) {
-                Pageable page = new PageRequest(i, size);
+                Pageable page = PageRequest.of(i, size);
                 log.info("Indexing {} page {} of {}, size {}", className, i, jpaRepository.count() / size, size);
                 Page<T> results = jpaRepository.findAll(page);
                 results.map(result -> {
