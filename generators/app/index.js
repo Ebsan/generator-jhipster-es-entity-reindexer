@@ -1,12 +1,7 @@
 const chalk = require('chalk');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
-const {
-    SERVER_MAIN_SRC_DIR,
-    SERVER_MAIN_RES_DIR,
-    CLIENT_MAIN_SRC_DIR,
-    SUPPORTED_CLIENT_FRAMEWORKS
-} = require('generator-jhipster/generators/generator-constants');
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, CLIENT_MAIN_SRC_DIR } = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
 
 module.exports = class extends BaseGenerator {
@@ -87,6 +82,10 @@ module.exports = class extends BaseGenerator {
         this.authenticationType = this.jhipsterAppConfig.authenticationType;
         this.jhiPrefixDashed = this.jhipsterAppConfig.jhiPrefix;
 
+        // create variables based off of jhipster version
+        this.appFolder = 'app/admin/elasticsearch-reindex/';
+        this.serviceFolder = this.appFolder;
+
         // use function in generator-base.js from generator-jhipster
         this.frontendAppName = this.getFrontendAppName();
 
@@ -97,7 +96,7 @@ module.exports = class extends BaseGenerator {
 
         // variable from questions
         if (typeof this.entities === 'undefined') {
-            this.entities = this.promptAnswers.entities;
+            this.entities = this.promptAnswers.entities; // TODO If no entities are selected we should probably exit early
         }
 
         // show all variables
@@ -129,16 +128,6 @@ module.exports = class extends BaseGenerator {
         this.log(`Entities=${this.entities}`);
         this.log('------\n');
 
-        if (Object.values(SUPPORTED_CLIENT_FRAMEWORKS).includes(this.clientFramework)) {
-            // this.template('dummy.txt', `dummy-${this.clientFramework}.txt`);
-        }
-
-        if (this.buildTool === 'maven') {
-            // this.template('dummy.txt', 'dummy-maven.txt');
-        } else if (this.buildTool === 'gradle') {
-            // this.template('dummy.txt', 'dummy-gradle.txt');
-        }
-
         // Register this generator as a dev dependency
         this.addNpmDevDependency('generator-jhipster-es-entity-reindexer', packagejs.version);
         try {
@@ -151,6 +140,43 @@ module.exports = class extends BaseGenerator {
             );
         } catch (err) {
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
+
+        /**
+         *  VALIDATE VARIABLES
+         */
+        if (this.entities.length === 0) {
+            this.log(chalk.yellow('[WARNING] No entities were selected, generated service may fail to compile'));
+        }
+        if (this.searchEngine !== 'elasticsearch') {
+            this.log(
+                chalk.yellow(
+                    'WARNING search engine is not set to Elasticsearch in JHipster configuration, ' +
+                        'generated service may fail to compile'
+                )
+            );
+        }
+
+        /**
+         *  WRITE TEMPLATES
+         */
+        if (!this.skipServer) {
+            // this.template(
+            //     'src/main/java/package/web/rest/_ElasticsearchIndexResource.java',
+            //     `${this.javaDir}/web/rest/ElasticsearchIndexResource.java`,
+            //     this,
+            //     {}
+            // );
+            this.template(
+                'src/main/java/package/service/_ElasticsearchIndexService.java',
+                `${this.javaDir}/service/ElasticsearchIndexService.java`,
+                this,
+                {}
+            );
+            // TODO this might be needed for the @Time annotation
+            // if (this.jhipsterMajorVersion > 5) {
+            //     this.addMavenDependency('io.dropwizard.metrics', 'metrics-annotation', '4.1.2');
+            // }
         }
     }
 
@@ -169,10 +195,13 @@ module.exports = class extends BaseGenerator {
             yarn: this.clientPackageManager === 'yarn',
             callback: injectDependenciesAndConstants
         };
+        this.log(chalk.blue(`Install Config: ${installConfig}`));
+
         if (this.options['skip-install']) {
             this.log(logMsg);
         } else {
-            this.installDependencies(installConfig);
+            // TODO figure out how to installDependencies
+            // this.installDependencies(installConfig);
         }
     }
 
