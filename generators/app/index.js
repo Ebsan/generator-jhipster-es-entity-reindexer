@@ -12,12 +12,12 @@ const packagejs = require('../../package.json');
 module.exports = class extends BaseGenerator {
     get initializing() {
         return {
-            // init(args) {
-            //     if (args === 'default') {
-            //         // do something when argument is 'default'
-            //         this.message = 'default message';
-            //     }
-            // },
+            init(args) {
+                if (args === 'default') {
+                    // do something when argument is 'default'
+                    this.message = 'default message';
+                }
+            },
             readConfig() {
                 this.jhipsterAppConfig = this.getJhipsterConfig('.yo-rc.json').createProxy();
                 if (!this.jhipsterAppConfig) {
@@ -76,6 +76,16 @@ module.exports = class extends BaseGenerator {
         this.clientFramework = this.jhipsterAppConfig.clientFramework;
         this.clientPackageManager = this.jhipsterAppConfig.clientPackageManager;
         this.buildTool = this.jhipsterAppConfig.buildTool;
+        this.applicationType = this.jhipsterAppConfig.applicationType;
+        this.nativeLanguage = this.jhipsterAppConfig.nativeLanguage;
+        this.languages = this.jhipsterAppConfig.languages;
+        this.searchEngine = this.jhipsterAppConfig.searchEngine; // TODO This needs to be checked EARLY and cancel whole operationg if false
+        this.enableTranslation = this.jhipsterAppConfig.enableTranslation;
+        this.skipClient = this.jhipsterAppConfig.skipClient;
+        this.skipServer = this.jhipsterAppConfig.skipServer;
+        this.skipUserManagement = this.jhipsterAppConfig.skipUserManagement;
+        this.authenticationType = this.jhipsterAppConfig.authenticationType;
+        this.jhiPrefixDashed = this.jhipsterAppConfig.jhiPrefix;
 
         // use function in generator-base.js from generator-jhipster
         this.frontendAppName = this.getFrontendAppName();
@@ -97,7 +107,16 @@ module.exports = class extends BaseGenerator {
         this.log(`clientFramework=${this.clientFramework}`);
         this.log(`clientPackageManager=${this.clientPackageManager}`);
         this.log(`buildTool=${this.buildTool}`);
-
+        this.log(`applicationType=${this.applicationType}`);
+        this.log(`nativeLanguage=${this.nativeLanguage}`);
+        this.log(`languages=${this.languages}`);
+        this.log(`searchEngine=${this.searchEngine}`);
+        this.log(`enableTranslation=${this.enableTranslation}`);
+        this.log(`skipClient=${this.skipClient}`);
+        this.log(`skipServer=${this.skipServer}`);
+        this.log(`skipUserManagement=${this.skipUserManagement}`);
+        this.log(`authenticationType=${this.authenticationType}`);
+        this.log(`jhiPrefixDashed=${this.jhiPrefixDashed}`);
         this.log('\n--- some function ---');
         this.log(`frontendAppName=${this.frontendAppName}`);
 
@@ -111,13 +130,13 @@ module.exports = class extends BaseGenerator {
         this.log('------\n');
 
         if (Object.values(SUPPORTED_CLIENT_FRAMEWORKS).includes(this.clientFramework)) {
-            this.template('dummy.txt', `dummy-${this.clientFramework}.txt`);
+            // this.template('dummy.txt', `dummy-${this.clientFramework}.txt`);
         }
 
         if (this.buildTool === 'maven') {
-            this.template('dummy.txt', 'dummy-maven.txt');
+            // this.template('dummy.txt', 'dummy-maven.txt');
         } else if (this.buildTool === 'gradle') {
-            this.template('dummy.txt', 'dummy-gradle.txt');
+            // this.template('dummy.txt', 'dummy-gradle.txt');
         }
 
         // Register this generator as a dev dependency
@@ -135,27 +154,27 @@ module.exports = class extends BaseGenerator {
         }
     }
 
-    // install() {
-    //     const logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
+    install() {
+        const logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
-    //     const injectDependenciesAndConstants = err => {
-    //         if (err) {
-    //             this.warning('Install of dependencies failed!');
-    //             this.log(logMsg);
-    //         }
-    //     };
-    //     const installConfig = {
-    //         bower: false,
-    //         npm: this.clientPackageManager !== 'yarn',
-    //         yarn: this.clientPackageManager === 'yarn',
-    //         callback: injectDependenciesAndConstants
-    //     };
-    //     if (this.options['skip-install']) {
-    //         this.log(logMsg);
-    //     } else {
-    //         this.installDependencies(installConfig);
-    //     }
-    // }
+        const injectDependenciesAndConstants = err => {
+            if (err) {
+                this.warning('Install of dependencies failed!');
+                this.log(logMsg);
+            }
+        };
+        const installConfig = {
+            bower: false,
+            npm: this.clientPackageManager !== 'yarn',
+            yarn: this.clientPackageManager === 'yarn',
+            callback: injectDependenciesAndConstants
+        };
+        if (this.options['skip-install']) {
+            this.log(logMsg);
+        } else {
+            this.installDependencies(installConfig);
+        }
+    }
 
     end() {
         this.log('End of es-entity-reindexer generator');

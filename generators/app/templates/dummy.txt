@@ -1,2 +1,0 @@
-hello es-entity-reindexer!
-It's dummy.txt
