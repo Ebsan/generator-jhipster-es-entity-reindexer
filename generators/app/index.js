@@ -173,10 +173,7 @@ module.exports = class extends BaseGenerator {
                 this,
                 {}
             );
-            // TODO this might be needed for the @Time annotation
-            // if (this.jhipsterMajorVersion > 5) {
-            //     this.addMavenDependency('io.dropwizard.metrics', 'metrics-annotation', '4.1.2');
-            // }
+            this.addMavenDependency('io.dropwizard.metrics', 'metrics-annotation', null);
         }
     }
 
