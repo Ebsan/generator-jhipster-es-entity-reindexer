@@ -39,7 +39,7 @@ module.exports = class extends BaseGenerator {
                         `\nYour generated project used an old JHipster version (${currentJhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`
                     );
                 }
-            }
+            },
         };
     }
 
@@ -193,7 +193,7 @@ module.exports = class extends BaseGenerator {
             bower: false,
             npm: this.clientPackageManager !== 'yarn',
             yarn: this.clientPackageManager === 'yarn',
-            callback: injectDependenciesAndConstants
+            callback: injectDependenciesAndConstants,
         };
         this.log(chalk.blue(`Install Config: ${installConfig}`));
 
