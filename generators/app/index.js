@@ -178,32 +178,151 @@ module.exports = class extends BaseGenerator {
             );
             this.addMavenDependency('io.dropwizard.metrics', 'metrics-annotation', null);
         }
+        if (!this.skipClient) {
+            this.template(
+                'src/main/webapp/app/admin/elasticsearch-reindex/_elasticsearch-reindex-modal.component.html.ejs',
+                `${webappDir}${this.appFolder}/elasticsearch-reindex-modal.component.html`,
+                this,
+                {}
+            );
+            this.template(
+                'src/main/webapp/app/admin/elasticsearch-reindex/_elasticsearch-reindex-modal.component.ts.ejs',
+                `${webappDir}${this.appFolder}/elasticsearch-reindex-modal.component.ts`,
+                this,
+                {}
+            );
+            this.template(
+                'src/main/webapp/app/admin/elasticsearch-reindex/_elasticsearch-reindex-selected-modal.component.ts.ejs',
+                `${webappDir}${this.appFolder}/elasticsearch-reindex-selected-modal.component.ts`,
+                this,
+                {}
+            );
+            this.template(
+                'src/main/webapp/app/admin/elasticsearch-reindex/_elasticsearch-reindex.component.html.ejs',
+                `${webappDir}${this.appFolder}/elasticsearch-reindex.component.html`,
+                this,
+                {}
+            );
+            this.template(
+                'src/main/webapp/app/admin/elasticsearch-reindex/_elasticsearch-reindex.component.ts.ejs',
+                `${webappDir}${this.appFolder}/elasticsearch-reindex.component.ts`,
+                this,
+                {}
+            );
+            this.template(
+                'src/main/webapp/app/admin/elasticsearch-reindex/_elasticsearch-reindex.module.ts.ejs',
+                `${webappDir}${this.appFolder}/elasticsearch-reindex.module.ts`,
+                this,
+                {}
+            );
+            this.template(
+                'src/main/webapp/app/admin/elasticsearch-reindex/_elasticsearch-reindex.route.ts.ejs',
+                `${webappDir}${this.appFolder}/elasticsearch-reindex.route.ts`,
+                this,
+                {}
+            );
+            this.template(
+                'src/main/webapp/app/admin/elasticsearch-reindex/_elasticsearch-reindex.service.ts.ejs',
+                `${webappDir}${this.appFolder}/elasticsearch-reindex.service.ts`,
+                this,
+                {}
+            );
+            this.template(
+                'src/main/webapp/app/admin/elasticsearch-reindex/_index.ts.ejs',
+                `${webappDir}${this.appFolder}/index.ts`,
+                this,
+                {}
+            );
+            if (this.addAdminToModule) {
+                this.addAdminToModule(
+                    this.baseName,
+                    'ElasticsearchReindex',
+                    'elasticsearch-reindex',
+                    'elasticsearch-reindex',
+                    this.enableTranslation,
+                    this.clientFramework
+                );
+            } else {
+                this.log(
+                    chalk.yellow(
+                        '[WARNING] the function addAdminToModule is missing, you need to add the missing import in src/main/webapp/app/admin/admin-routing.module.ts:'
+                    )
+                );
+                this.log(
+                    // eslint-disable-next-line prefer-template
+                    chalk.yellow('  - at the beginning of the file: ') +
+                        'import { ' +
+                        this.baseName +
+                        // eslint-disable-next-line quotes
+                        "ElasticsearchReindexModule } from './elasticsearch-reindex/elasticsearch-reindex.module';"
+                );
+                this.log(`${chalk.yellow('  - inside @NgModule, imports: ') + this.baseName}ElasticsearchReindexModule\n`);
+            }
+            if (this.addElementToAdminMenu) {
+                const iconName = 'search';
+                const routePrefix = 'admin/';
+                const routeKey = 'elasticsearch-reindex';
+                this.addElementToAdminMenu(routePrefix + routeKey, iconName, this.enableTranslation, this.clientFramework, routeKey);
+                if (this.enableTranslation) {
+                    this.languages.forEach(language => {
+                        this.addAdminElementTranslationKey(routeKey, 'Reindex Elasticsearch', language);
+                    });
+                }
+            }
+            if (this.addAdminRoute) {
+                this.addAdminRoute(
+                    'elasticsearch-reindex',
+                    './elasticsearch-reindex/elasticsearch-reindex.module',
+                    `${this.baseName}ElasticsearchReindexModule`
+                );
+            } else {
+                this.log(
+                    chalk.yellow(
+                        '[WARNING] the function addAdminRoute is missing, you need to add the missing route to src/main/webapp/app/admin/admin-routing.module.ts'
+                    )
+                );
+            }
+            if (this.enableTranslation) {
+                this.languages.forEach(language => {
+                    this.template(
+                        'src/main/webapp/i18n/elasticsearch-reindex.json.ejs',
+                        `${webappDir}i18n/${language}/elasticsearch-reindex.json`,
+                        this,
+                        {}
+                    );
+                });
+            }
+        }
     }
 
     install() {
-        const logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
-
-        const injectDependenciesAndConstants = err => {
-            if (err) {
-                this.warning('Install of dependencies failed!');
-                this.log(logMsg);
-            }
-        };
-        const installConfig = {
-            bower: false,
-            npm: this.clientPackageManager !== 'yarn',
-            yarn: this.clientPackageManager === 'yarn',
-            callback: injectDependenciesAndConstants,
-        };
-        this.log(chalk.blue(`Install Config: ${installConfig}`));
-
-        if (this.options['skip-install']) {
-            this.log(logMsg);
-        } else {
-            // TODO figure out how to installDependencies
-            // this.installDependencies(installConfig);
-        }
+        this.log(chalk.blue('Installing...'));
     }
+    // TODO Reenable after DEV
+    // install() {
+    //     const logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
+
+    //     const injectDependenciesAndConstants = err => {
+    //         if (err) {
+    //             this.warning('Install of dependencies failed!');
+    //             this.log(logMsg);
+    //         }
+    //     };
+    //     const installConfig = {
+    //         bower: false,
+    //         npm: this.clientPackageManager !== 'yarn',
+    //         yarn: this.clientPackageManager === 'yarn',
+    //         callback: injectDependenciesAndConstants,
+    //     };
+    //     this.log(chalk.blue(`Install Config: ${installConfig}`));
+
+    //     if (this.options['skip-install']) {
+    //         this.log(logMsg);
+    //     } else {
+    //         // TODO figure out how to installDependencies
+    //         // this.installDependencies(installConfig);
+    //     }
+    // }
 
     end() {
         this.log('End of es-entity-reindexer generator');
