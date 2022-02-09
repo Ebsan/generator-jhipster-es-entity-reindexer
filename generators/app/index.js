@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
-const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, CLIENT_MAIN_SRC_DIR } = require('generator-jhipster/generators/generator-constants');
+const { SERVER_MAIN_SRC_DIR, CLIENT_MAIN_SRC_DIR } = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
 
 module.exports = class extends BaseGenerator {
@@ -117,12 +117,8 @@ module.exports = class extends BaseGenerator {
             this.log(chalk.yellow('[WARNING] No entities were selected, generated service may fail to compile'));
         }
         if (this.searchEngine !== 'elasticsearch') {
-            this.log(
-                chalk.yellow(
-                    'WARNING search engine is not set to Elasticsearch in JHipster configuration, ' +
-                        'generated service may fail to compile'
-                )
-            );
+            this.log(chalk.red('[ERROR] search engine is not set to Elasticsearch in JHipster configuration, nothing to generate'));
+            this.async(new Error());
         }
 
         /**
@@ -296,6 +292,11 @@ module.exports = class extends BaseGenerator {
     // }
 
     end() {
+        this.log(
+            chalk.blue(
+                'Added a new property to ApplicationProperties.java. Make sure to add a value for application.elasticsearch.reindex-on-startup (true|false) to your application.yml file.'
+            )
+        );
         this.log('End of es-entity-reindexer generator');
     }
 };
