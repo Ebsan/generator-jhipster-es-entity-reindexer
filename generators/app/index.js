@@ -92,44 +92,9 @@ module.exports = class extends BaseGenerator {
 
         // use constants from generator-constants.js
         const javaDir = `${SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
-        const resourceDir = SERVER_MAIN_RES_DIR;
         const webappDir = CLIENT_MAIN_SRC_DIR;
 
-        // TODO to delete per above
-        // variable from questions
-        // if (typeof this.entities === 'undefined') {
-        //     this.entities = this.promptAnswers.entities; // TODO If no entities are selected we should probably exit early
-        // }
         this.entities = this.getExistingEntityNames();
-
-        // show all variables
-        this.log('\n--- some config read from config ---');
-        this.log(`baseName=${this.baseName}`);
-        this.log(`packageName=${this.packageName}`);
-        this.log(`clientFramework=${this.clientFramework}`);
-        this.log(`clientPackageManager=${this.clientPackageManager}`);
-        this.log(`buildTool=${this.buildTool}`);
-        this.log(`applicationType=${this.applicationType}`);
-        this.log(`nativeLanguage=${this.nativeLanguage}`);
-        this.log(`languages=${this.languages}`);
-        this.log(`searchEngine=${this.searchEngine}`);
-        this.log(`enableTranslation=${this.enableTranslation}`);
-        this.log(`skipClient=${this.skipClient}`);
-        this.log(`skipServer=${this.skipServer}`);
-        this.log(`skipUserManagement=${this.skipUserManagement}`);
-        this.log(`authenticationType=${this.authenticationType}`);
-        this.log(`jhiPrefixDashed=${this.jhiPrefixDashed}`);
-        this.log('\n--- some function ---');
-        this.log(`frontendAppName=${this.frontendAppName}`);
-
-        this.log('\n--- some const ---');
-        this.log(`javaDir=${javaDir}`);
-        this.log(`resourceDir=${resourceDir}`);
-        this.log(`webappDir=${webappDir}`);
-
-        this.log('\n--- variables from questions ---');
-        this.log(`Entities=${this.entities}`);
-        this.log('------\n');
 
         // Register this generator as a dev dependency
         this.addNpmDevDependency('generator-jhipster-es-entity-reindexer', packagejs.version);
@@ -173,6 +138,12 @@ module.exports = class extends BaseGenerator {
             this.template(
                 'src/main/java/package/service/_ElasticsearchIndexService.java.ejs',
                 `${javaDir}/service/ElasticsearchIndexService.java`,
+                this,
+                {}
+            );
+            this.template(
+                'src/main/java/package/config/_ApplicationProperties.java.ejs',
+                `${javaDir}/config/ApplicationProperties.java`,
                 this,
                 {}
             );
