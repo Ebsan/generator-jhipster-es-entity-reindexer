@@ -19,13 +19,11 @@
 
 //         it('generate ApplicationProperties.java file', () => {
 //             this.timeout(10000);
-//             // TODO For testing only
 //             // assert.equal(true, true);
 //             // assert.file(['ApplicationProperties.java']);
 //         });
 //     });
 
-//     // TODO Doesn't support Gradle or React yet
 //     // describe('Test with Gradle and React', () => {
 //     //     beforeEach(async () => {
 //     //         await helpers
@@ -46,7 +44,6 @@
 //     //     });
 //     // });
 
-//     // TODO Doesn't support Vue yet
 //     // describe('Test with Maven and Vue', () => {
 //     //     beforeEach(async () => {
 //     //         await helpers

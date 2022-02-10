@@ -43,27 +43,6 @@ module.exports = class extends BaseGenerator {
         };
     }
 
-    // TODO Prompting not really needed since ALL entities should always be reindexable.
-    // async prompting() {
-    //     this.entityNames = this.getExistingEntityNames();
-
-    //     const prompts = [
-    //         {
-    //             when: () => typeof this.entities === 'undefined',
-    //             type: 'checkbox',
-    //             name: 'entities',
-    //             message: 'Which entities would you like to reindex with Elasticsearch?',
-    //             choices: this.entityNames,
-    //             default: this.entityNames[0]
-    //         }
-    //     ];
-
-    //     await this.prompt(prompts).then(answers => {
-    //         this.promptAnswers = answers;
-    //         // To access props answers use this.promptAnswers.someOption;
-    //     });
-    // }
-
     writing() {
         // read config from .yo-rc.json
         this.baseName = this.jhipsterAppConfig.baseName;
@@ -75,7 +54,7 @@ module.exports = class extends BaseGenerator {
         this.applicationType = this.jhipsterAppConfig.applicationType;
         this.nativeLanguage = this.jhipsterAppConfig.nativeLanguage;
         this.languages = this.jhipsterAppConfig.languages;
-        this.searchEngine = this.jhipsterAppConfig.searchEngine; // TODO This needs to be checked EARLY and cancel whole operationg if false
+        this.searchEngine = this.jhipsterAppConfig.searchEngine;
         this.enableTranslation = this.jhipsterAppConfig.enableTranslation;
         this.skipClient = this.jhipsterAppConfig.skipClient;
         this.skipServer = this.jhipsterAppConfig.skipServer;
