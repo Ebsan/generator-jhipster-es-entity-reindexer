@@ -5,7 +5,8 @@
   "keywords": [
     "yeoman-generator",
     "jhipster-module",
-    "jhipster-7"
+    "jhipster-7",
+    "elasticsearch"
   ],
   "homepage": "https://github.com/ebsanu/generator-jhipster-es-entity-reindexer",
   "bugs": {
