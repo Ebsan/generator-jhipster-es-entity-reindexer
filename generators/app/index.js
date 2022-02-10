@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
-const { SERVER_MAIN_SRC_DIR, CLIENT_MAIN_SRC_DIR } = require('generator-jhipster/generators/generator-constants');
+const { SERVER_MAIN_SRC_DIR, CLIENT_MAIN_SRC_DIR, MAIN_DIR } = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
 
 module.exports = class extends BaseGenerator {
@@ -124,6 +124,8 @@ module.exports = class extends BaseGenerator {
         /**
          *  WRITE TEMPLATES
          */
+        this.template('src/main/resources/config/_application.yml.ejs', `${MAIN_DIR}/resources/config/application.yml`, this, {});
+
         if (!this.skipServer) {
             this.template(
                 'src/main/java/package/web/rest/_ElasticsearchIndexResource.java.ejs',
@@ -145,6 +147,7 @@ module.exports = class extends BaseGenerator {
             );
             this.addMavenDependency('io.dropwizard.metrics', 'metrics-annotation', null);
         }
+
         if (!this.skipClient) {
             this.template(
                 'src/main/webapp/app/admin/elasticsearch-reindex/_elasticsearch-reindex-modal.component.html.ejs',

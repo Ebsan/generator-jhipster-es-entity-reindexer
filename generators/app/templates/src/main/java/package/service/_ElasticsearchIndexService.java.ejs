@@ -2,6 +2,7 @@ package <%=packageName%>.service;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import <%=packageName%>.config.ApplicationProperties;
 import <%=packageName%>.domain.*;
 import <%=packageName%>.repository.*;
 import <%=packageName%>.repository.search.*;
@@ -59,8 +60,9 @@ public class ElasticsearchIndexService implements ApplicationListener<ContextRef
     <%_ } _%>
     private final ElasticsearchOperations elasticsearchOperations;
 
-    @Value("#{systemEnvironment['REINDEX_ELASTICSEARCH'] ?: ''}")
-    private String reindex_elasticsearch;
+    private final ApplicationProperties applicationProperties;
+
+    private boolean reindex_elasticsearch;
 
     public ElasticsearchIndexService(
         <%_ if (!skipUserManagement && (applicationType === 'monolith' || applicationType === 'gateway')) { _%>
@@ -75,7 +77,8 @@ public class ElasticsearchIndexService implements ApplicationListener<ContextRef
         <%_
             });
         } _%>
-        ElasticsearchOperations elasticsearchOperations) {
+        ElasticsearchOperations elasticsearchOperations,
+        ApplicationProperties applicationProperties ) {
         <%_ if (!skipUserManagement && (applicationType === 'monolith' || applicationType === 'gateway')) { _%>
         this.userRepository = userRepository;
         this.userSearchRepository = userSearchRepository;
@@ -89,14 +92,16 @@ public class ElasticsearchIndexService implements ApplicationListener<ContextRef
             });
         } _%>
         this.elasticsearchOperations = elasticsearchOperations;
+        this.applicationProperties = applicationProperties;
     }
 
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent ) {
-        if (this.reindex_elasticsearch.isEmpty()) {
-            log.info("You may reindex all ElasticSearch entities on start-up with the REINDEX_ELASTICSEARCH environment variable set");
-        } else {
-            log.info("Reindexing all ElasticSearch entities");
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        this.reindex_elasticsearch = applicationProperties.getElasticsearch().getReindexOnStartup();
+        if(this.reindex_elasticsearch) {
+            log.info("Reindexing all entities with Elasticsearch...");
             this.reindexSelected(null, true);
+        } else {
+            log.info("Skipping Elasticsearch reindex. You may reindex all entities with Elasticsearch on start up by setting application.elasticsearch.reindex-on-startup to true.");
         }
     }
 
