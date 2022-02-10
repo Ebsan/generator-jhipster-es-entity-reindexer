@@ -265,35 +265,6 @@ module.exports = class extends BaseGenerator {
         }
     }
 
-    install() {
-        this.log(chalk.blue('Installing...'));
-    }
-    // TODO Reenable after DEV
-    // install() {
-    //     const logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
-
-    //     const injectDependenciesAndConstants = err => {
-    //         if (err) {
-    //             this.warning('Install of dependencies failed!');
-    //             this.log(logMsg);
-    //         }
-    //     };
-    //     const installConfig = {
-    //         bower: false,
-    //         npm: this.clientPackageManager !== 'yarn',
-    //         yarn: this.clientPackageManager === 'yarn',
-    //         callback: injectDependenciesAndConstants,
-    //     };
-    //     this.log(chalk.blue(`Install Config: ${installConfig}`));
-
-    //     if (this.options['skip-install']) {
-    //         this.log(logMsg);
-    //     } else {
-    //         // TODO figure out how to installDependencies
-    //         // this.installDependencies(installConfig);
-    //     }
-    // }
-
     end() {
         this.log(
             chalk.blue(
