@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-es-entity-reindexer",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Generates code to reindex selected entities with Elasticsearch.",
   "keywords": [
     "yeoman-generator",
