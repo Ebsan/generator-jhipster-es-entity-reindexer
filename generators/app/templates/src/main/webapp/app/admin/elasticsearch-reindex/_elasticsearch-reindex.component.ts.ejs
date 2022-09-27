@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-<%_ if (enableTranslation && requiresSetLocation) { _%>
-import { JhiLanguageService } from 'ng-jhipster';
-<%_ } _%>
 
 import { ElasticsearchReindexModalComponent } from './elasticsearch-reindex-modal.component';
 import { ElasticsearchReindexSelectedModalComponent } from './elasticsearch-reindex-selected-modal.component';
@@ -17,15 +14,7 @@ export class ElasticsearchReindexComponent {
     reindexType: string;
     checks: { [key: string]: boolean } = {};
 
-    constructor(
-        <%_ if (enableTranslation && requiresSetLocation) { _%>
-        private jhiLanguageService: JhiLanguageService,
-        <%_ } _%>
-        private modalService: NgbModal
-    ) {
-      <%_ if (enableTranslation && requiresSetLocation) { %>
-        this.jhiLanguageService.setLocations(['elasticsearch-reindex']);
-      <%_ } _%>
+    constructor(private modalService: NgbModal) {
         this.reindexType = 'all';
         this.entities = [
     <%_ if (applicationType === 'monolith' || applicationType === 'microservice') {
