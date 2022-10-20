@@ -1,5 +1,11 @@
 # Change Log for Elasticsearch Entity Reindexer - Jhipster Module
 
+## [1.0.4] - 2022-10-20
+
+### Fixed
+
+- Fixes #6 - Get correct packagName if not null. We need to eventually convert this to the new blueprints.
+
 ## [1.0.3] - 2022-10-20
 
 ### Fixed
