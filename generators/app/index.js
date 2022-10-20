@@ -70,7 +70,9 @@ module.exports = class extends BaseGenerator {
         // use function in generator-base.js from generator-jhipster
         this.frontendAppName = this.getFrontendAppName();
 
-        // use constants from generator-constants.js
+        if (!this.packageFolder) {
+            this.packageFolder = this.packageName.replaceAll('.', '/');
+        }
         const javaDir = `${SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
         const webappDir = CLIENT_MAIN_SRC_DIR;
 
