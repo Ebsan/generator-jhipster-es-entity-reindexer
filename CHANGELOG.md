@@ -1,5 +1,11 @@
 # Change Log for Elasticsearch Entity Reindexer - Jhipster Module
 
+## [1.0.5] - 2023-05-23
+
+### Fixed
+
+- Merged #7 - Bugfixes for application properties issues by @nitram84
+- Merged #8 - Fix importes for Jhipster 7.9.3 by @mraible
 ## [1.0.4] - 2022-10-20
 
 ### Fixed
