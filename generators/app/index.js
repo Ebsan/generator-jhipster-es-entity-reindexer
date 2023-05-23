@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const semver = require('semver');
 const fs = require('fs');
+const _ = require('lodash');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const { SERVER_MAIN_SRC_DIR, CLIENT_MAIN_SRC_DIR, MAIN_DIR } = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
@@ -107,14 +108,18 @@ module.exports = class extends BaseGenerator {
          *  WRITE TEMPLATES
          */
 
-        const appyamlDestination = `${MAIN_DIR}/resources/config/application.yml`;
-        let applicationFile = fs.readFileSync(appyamlDestination, 'utf-8');
-        this.render('src/main/resources/config/_application.yml.ejs', res => {
-            applicationFile += res;
-            fs.writeFileSync(appyamlDestination, applicationFile);
-        });
-
         if (!this.skipServer) {
+            const appyamlDestination = `${MAIN_DIR}/resources/config/application.yml`;
+            let applicationFile = fs.readFileSync(appyamlDestination, 'utf-8');
+            if (!applicationFile.includes('    reindex-on-startup')) {
+                this.render('src/main/resources/config/_application.yml.ejs', res => {
+                    applicationFile += res;
+                    fs.writeFileSync(appyamlDestination, applicationFile);
+                });
+            }
+
+            this.humanizedBaseName = _.startCase(this.baseName);
+
             this.template(
                 'src/main/java/package/web/rest/_ElasticsearchIndexResource.java.ejs',
                 `${javaDir}/web/rest/ElasticsearchIndexResource.java`,
